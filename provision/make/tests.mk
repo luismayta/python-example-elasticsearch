@@ -1,4 +1,4 @@
-docker_test := "${PATH_DOCKER_COMPOSE}"/test.yml
+docker_test=$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/test.yml
 
 test.help:
 	@echo '    Tests:'
