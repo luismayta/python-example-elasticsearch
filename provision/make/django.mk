@@ -14,21 +14,21 @@ django: clean
 		make django.help;\
 	fi
 	@if [ -z "${stage}" ] && [ -n "${command}" ]; then \
-		$(docker-compose) -f "${PATH_DOCKER_COMPOSE}"/dev.yml run --rm "$(DOCKER_SERVICE)" bash -c "pipenv run python $(MANAGE) ${command}" ; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/dev.yml run --rm $(DOCKER_SERVICE) bash -c "pipenv run python $(MANAGE) ${command}" ; \
 	elif [ -n "${stage}" ] && [ -n "${command}" ]; then \
-		$(docker-compose) -f "${PATH_DOCKER_COMPOSE}"/"${stage}".yml run --rm "$(DOCKER_SERVICE)" bash -c "pipenv run python $(MANAGE) ${command}"; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml run --rm $(DOCKER_SERVICE) bash -c "pipenv run python $(MANAGE) ${command}"; \
 	fi
 
 django.runserver: clean
 	@if [ -z "${stage}" ]; then \
 		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/dev.yml run --rm --service-ports $(DOCKER_SERVICE) bash -c "pipenv run python $(MANAGE) runserver 0.0.0.0:${PROJECT_PORT} --noreload" ; \
 	else \
-		$(docker-compose) -f "${PATH_DOCKER_COMPOSE}"/"${stage}".yml run --rm --service-ports "$(DOCKER_SERVICE)" bash -c "pipenv run python $(MANAGE) runserver 0.0.0.0:${PROJECT_PORT} --noreload"; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml run --rm --service-ports $(DOCKER_SERVICE) bash -c "pipenv run python $(MANAGE) runserver 0.0.0.0:${PROJECT_PORT} --noreload"; \
 	fi
 
 django.gunicorn: clean
 	@if [ -z "${stage}" ]; then \
-		$(docker-compose) -f "${PATH_DOCKER_COMPOSE}"/dev.yml run --rm --service-ports "$(DOCKER_SERVICE)" bash -c "pipenv run gunicorn config.wsgi -b 0.0.0.0:${PROJECT_PORT}" ; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/dev.yml run --rm --service-ports $(DOCKER_SERVICE) bash -c "pipenv run gunicorn config.wsgi -b 0.0.0.0:${PROJECT_PORT}" ; \
 	else \
-		$(docker-compose) -f "${PATH_DOCKER_COMPOSE}"/"${stage}".yml run --rm --service-ports "$(DOCKER_SERVICE)" bash -c "pipenv run gunicorn config.wsgi -b 0.0.0.0:${PROJECT_PORT}"; \
+		$(docker-compose) -f ${PATH_DOCKER_COMPOSE}/${stage}.yml run --rm --service-ports $(DOCKER_SERVICE) bash -c "pipenv run gunicorn config.wsgi -b 0.0.0.0:${PROJECT_PORT}"; \
 	fi
