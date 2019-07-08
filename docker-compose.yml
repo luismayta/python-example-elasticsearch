@@ -1,0 +1,30 @@
+# Docker Compose
+# https://docs.docker.com/compose/
+# Usage: docker-compose up
+---
+version: "3"
+services:
+
+  # Django web server.
+  app:
+    build:
+      context: .
+      dockerfile: provision/docker/app/Dockerfile
+    environment: &environment
+      - MEDIA_URL=/media/
+      - STATIC_URL=/static/
+      - STAGE=local
+      - DJANGO_ADMIN_URL=admin
+      - AWS_REGION=us-east-1
+      - AWS_DEFAULT_REGION=us-east-1
+    volumes:
+      - .:/usr/src
+    env_file:
+      - .env
+
+  # Redis.
+  redis:
+    restart: always
+    image: redis:alpine
+    environment: *environment
+    env_file: .env
