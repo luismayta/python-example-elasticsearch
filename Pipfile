@@ -58,6 +58,8 @@ django-cors-headers = ">=3.0.1"
 Pillow = ">=4.1.1"
 celery = ">=4.1.1"
 django-url-filter = ">=0.3.12"
+python-box = ">=3.2.4"
+coreapi = ">=2.3.3"
 
 [scripts]
 test = "pytest"
