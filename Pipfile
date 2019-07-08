@@ -57,6 +57,7 @@ django-imagekit = ">=4.0"
 django-cors-headers = ">=3.0.1"
 Pillow = ">=4.1.1"
 celery = ">=4.1.1"
+django-url-filter = ">=0.3.12"
 
 [scripts]
 test = "pytest"
