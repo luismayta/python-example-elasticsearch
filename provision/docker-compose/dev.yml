@@ -1,0 +1,61 @@
+# Docker Compose
+# https://docs.docker.com/compose/
+
+version: "3"
+services:
+
+  # PostgreSQL database.
+  db:
+    restart: always
+    image: postgres:11.4
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blog
+    volumes:
+      - db:/var/lib/postgresql/data # Using the declared volume.
+      - .:/usr/src
+
+  # Django web server.
+  app:
+    image: python-example-elasticsearch-app-dev
+    ports:
+      - "8000:8000"
+    environment: &environment
+      - STAGE=local
+      - GUNICORN_HOST=0.0.0.0
+      - GUNICORN_PORT=8000
+      - MEDIA_URL=/media/
+      - STATIC_URL=/static/
+      - DJANGO_DB_URL=postgres://postgres:postgres@db:5432/blog
+      - DJANGO_SECRET_KEY=j36%5df7q5+ov)wz+(=vt7d81ka^xx!5%0)nx=z2i&)*5r^
+      - DJANGO_REDIS_CACHE_URL=redis://redis:6379/0
+      - DJANGO_REDIS_SESSION_URL=redis://redis:6379/1
+    build:
+      args:
+        stage: dev
+    volumes:
+      - .:/usr/src
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+
+  check:
+    image: python-example-elasticsearch-check-dev
+    environment: *environment
+    build:
+      context: .
+      dockerfile: provision/docker/check/Dockerfile
+      args:
+        stage: dev
+    volumes:
+      - .:/usr/src
+    env_file:
+      - .env
+
+
+volumes:
+  db:
+  broker:

@@ -1,0 +1,45 @@
+# Docker Compose
+# https://docs.docker.com/compose/
+#
+# Usage: test up
+
+version: "3"
+services:
+
+  # PostgreSQL database.
+  db-test:
+    restart: always
+    image: postgres:11.4
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=blog-test
+    env_file:
+      - .env
+    volumes:
+      - db-test:/var/lib/postgresql/data # Using the declared volume.
+
+  # Django web server.
+  app:
+    image: python-example-elasticsearch-app-test
+    environment: &environment
+      - STAGE=test
+      - DJANGO_SETTINGS_MODULE=config.settings.test
+      - DJANGO_DB_URL=postgres://postgres:postgres@db-test:5432/blog-test
+      - DJANGO_SECRET_KEY=j36%5df7q5+ov)wz+(=vt7d81ka^xx!5%0)nx=z2i&)*5r^
+      - DJANGO_REDIS_CACHE_URL=redis://redis:6379/2
+      - DJANGO_REDIS_SESSION_URL=redis://redis:6379/3
+    build:
+      args:
+        stage: test
+    volumes:
+      - .:/usr/src
+    env_file:
+      - .env
+    depends_on:
+      - db-test
+      - redis
+
+volumes:
+  db-test:
+  broker-test:
