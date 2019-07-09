@@ -1,0 +1,22 @@
+# Groups.
+
+- model: auth.Group
+  pk: 1
+  fields:
+    name: public
+
+- model: auth.Group
+  pk: 2
+  fields:
+    name: administrator
+    permissions:
+      # Post
+      - ['get_post', 'post', 'post']
+      - ['add_post', 'post', 'post']
+      - ['patch_post', 'post', 'post']
+      - ['delete_post', 'post', 'post']
+      # comment
+      - ['get_comment', 'comment', 'comment']
+      - ['add_comment', 'comment', 'comment']
+      - ['patch_comment', 'comment', 'comment']
+      - ['delete_comment', 'comment', 'comment']
