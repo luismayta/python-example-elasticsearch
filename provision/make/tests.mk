@@ -19,19 +19,19 @@ test: clean
 		make test.help;\
 	fi
 	@if [ -n "${run}" ]; then \
-		$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run pytest ${run}";\
+		$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run py.test ${run}";\
 	fi
 
 test.all: clean
 	@echo $(MESSAGE) Running tests on the current Python interpreter with coverage $(END)
-	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run pytest"
+	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run py.test"
 
 test.picked: clean
-	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run pytest --picked"
+	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run py.test --picked"
 
 test.validate: clean
 	@echo $(MESSAGE) Running tests validation fixture $(END)
-	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run pytest --dead-fixtures"
+	$(docker_test) run --rm $(DOCKER_SERVICE) bash -c "pipenv run py.test --dead-fixtures"
 
 test.lint: clean
 	pre-commit run --all-files --verbose
